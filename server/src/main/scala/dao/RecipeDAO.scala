@@ -1,8 +1,8 @@
 package dao
 
-import zio.{IO, ZIO}
+import zio.{ IO, ZIO }
 import zio.macros.annotation.accessible
-import zioslick.{DatabaseProvider, RepositoryException, SlickZIO}
+import zioslick.{ DatabaseProvider, RepositoryException, SlickZIO }
 
 //@accessible
 //@mockable

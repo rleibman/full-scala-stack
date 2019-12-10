@@ -18,37 +18,37 @@ package api
 
 import akka.http.scaladsl.marshalling.{ Marshaller, Marshalling }
 import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.server.{Directive, Directive1, Route, RouteResult}
+import akka.http.scaladsl.server.{ Directive, Directive1, Route, RouteResult }
 import akka.http.scaladsl.marshalling.ToResponseMarshaller
 import akka.http.scaladsl.server.directives.RouteDirectives
 import akka.http.scaladsl.util.FastFuture._
-import zio.{DefaultRuntime, Task, ZIO}
+import zio.{ DefaultRuntime, Task, ZIO }
 
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ Future, Promise }
+import scala.util.{ Failure, Success }
 
 trait ZIODirectives extends DefaultRuntime {
   import RouteDirectives._
 
   implicit def zioMarshaller[A](
-                                 implicit m1: Marshaller[A, HttpResponse],
-                                 m2: Marshaller[Throwable, HttpResponse]
-                               ): Marshaller[Task[A], HttpResponse] =
+    implicit m1: Marshaller[A, HttpResponse],
+    m2: Marshaller[Throwable, HttpResponse]
+  ): Marshaller[Task[A], HttpResponse] =
     Marshaller { implicit ec => a =>
-    {
-      val r = a.foldM(
-        e => Task.fromFuture(implicit ec => m2(e)),
-        a => Task.fromFuture(implicit ec => m1(a))
-      )
+      {
+        val r = a.foldM(
+          e => Task.fromFuture(implicit ec => m2(e)),
+          a => Task.fromFuture(implicit ec => m1(a))
+        )
 
-      val p = Promise[List[Marshalling[HttpResponse]]]()
+        val p = Promise[List[Marshalling[HttpResponse]]]()
 
-      unsafeRunAsync(r) { exit =>
-        exit.fold(e => p.failure(e.squash), s => p.success(s))
+        unsafeRunAsync(r) { exit =>
+          exit.fold(e => p.failure(e.squash), s => p.success(s))
+        }
+
+        p.future
       }
-
-      p.future
-    }
     }
 
   private def fromFunction[A, B](f: A => Future[B]): ZIO[A, Throwable, B] =
@@ -70,14 +70,14 @@ trait ZIODirectives extends DefaultRuntime {
   }
 
   /**
-    * "Unwraps" a `Task[T]` and runs the inner route when the task has failed
-    * with the task's failure exception as an extraction of type `Throwable`.
-    * If the task succeeds the request is completed using the values marshaller
-    * (This directive therefore requires a marshaller for the task's type to be
-    * implicitly available.)
-    *
-    * @group task
-    */
+   * "Unwraps" a `Task[T]` and runs the inner route when the task has failed
+   * with the task's failure exception as an extraction of type `Throwable`.
+   * If the task succeeds the request is completed using the values marshaller
+   * (This directive therefore requires a marshaller for the task's type to be
+   * implicitly available.)
+   *
+   * @group task
+   */
   def zioCompleteOrRecoverWith(magnet: ZIOCompleteOrRecoverWithMagnet): Directive1[Throwable] =
     magnet.directive
 
@@ -91,10 +91,10 @@ trait ZIOCompleteOrRecoverWithMagnet {
 
 object ZIOCompleteOrRecoverWithMagnet extends ZIODirectives {
   implicit def apply[T](
-                         task: => Task[T]
-                       )(implicit m: ToResponseMarshaller[T]): ZIOCompleteOrRecoverWithMagnet =
+    task: => Task[T]
+  )(implicit m: ToResponseMarshaller[T]): ZIOCompleteOrRecoverWithMagnet =
     new ZIOCompleteOrRecoverWithMagnet {
-      override val directive: Directive1[Throwable] = Directive[Tuple1[Throwable]] { inner =>ctx =>
+      override val directive: Directive1[Throwable] = Directive[Tuple1[Throwable]] { inner => ctx =>
         val future = unsafeRunToFuture(task)
         import ctx.executionContext
         future.fast.transformWith {

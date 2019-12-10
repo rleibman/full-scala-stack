@@ -22,9 +22,9 @@ import components.AbstractComponent
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._
-import japgolly.scalajs.react.{BackendScope, Callback, CallbackTo, ReactMouseEventFrom, ScalaComponent}
+import japgolly.scalajs.react.{ BackendScope, Callback, CallbackTo, ReactMouseEventFrom, ScalaComponent }
 import org.scalajs.dom._
-import org.scalajs.dom.ext.{Ajax, AjaxException}
+import org.scalajs.dom.ext.{ Ajax, AjaxException }
 import org.scalajs.dom.raw.HTMLAnchorElement
 import pages.MainPage
 import upickle.default.read
@@ -61,17 +61,17 @@ object AppRouter extends AbstractComponent {
           ^.flex := "0 0  auto",
           ^.position := "relative",
           Menu(vertical = true)(
-              MenuItem(
-                active = resolution.page == MainPageData,
-                onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
-                  page.setEH(MainPageData)(event)
-                }
-              )("Main Page")
-            )
+            MenuItem(
+              active = resolution.page == MainPageData,
+              onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
+                page.setEH(MainPageData)(event)
+              }
+            )("Main Page")
           )
-        ),
-        <.div(^.flex := "1 1  auto", resolution.render())
-      )
+        )
+      ),
+      <.div(^.flex := "1 1  auto", resolution.render())
+    )
   }
 
   private val config: RouterConfig[AppPageData] = RouterConfigDsl[AppPageData].buildConfig { dsl =>
@@ -98,15 +98,11 @@ object AppRouter extends AbstractComponent {
     )
 
     (trimSlashes
-    | staticRoute("#newRecipe", MainPageData) ~> renderR(ctrl => MainPage()))
+      | staticRoute("#newRecipe", MainPageData) ~> renderR(ctrl => MainPage()))
       .notFound(redirectToPage(MainPageData)(Redirect.Replace))
       .renderWith(layout)
   }
   private val baseUrl = BaseUrl.fromWindowOrigin_/
-  //    if (dom.window.location.hostname == "localhost")
-  //    BaseUrl.fromWindowOrigin_/
-  //    else
-  //      BaseUrl.fromWindowOrigin / "mealorama/"
 
   val router = Router.apply(baseUrl, config)
 }

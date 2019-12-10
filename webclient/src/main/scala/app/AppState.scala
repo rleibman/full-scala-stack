@@ -20,8 +20,8 @@ import japgolly.scalajs.react.React
 import japgolly.scalajs.react.React.Context
 
 case class AppState(
-    //Add global app state here
-                   )
+  //Add global app state here
+)
 
 object AppState {
   val ctx: Context[AppState] = React.createContext(AppState())

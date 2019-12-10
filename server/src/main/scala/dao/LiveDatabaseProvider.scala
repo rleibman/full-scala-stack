@@ -2,7 +2,7 @@ package dao
 
 import slick.basic.BasicBackend
 import slick.jdbc.JdbcBackend._
-import zio.{UIO, ZIO}
+import zio.{ UIO, ZIO }
 import zioslick.DatabaseProvider
 
 trait LiveDatabaseProvider extends DatabaseProvider {

@@ -39,11 +39,11 @@ import japgolly.scalajs.react.vdom.html_<^._
 import routes.AppRouter
 
 object Content extends AbstractComponent {
-  case class State(mealoramaState: AppState = AppState())
+  case class State(appState: AppState = AppState())
 
   class Backend($ : BackendScope[_, State]) {
     def render(s: State): VdomElement =
-      appContext.provide(s.mealoramaState) {
+      appContext.provide(s.appState) {
         AppRouter.router()
       }
 

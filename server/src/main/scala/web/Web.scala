@@ -27,16 +27,16 @@ import scala.util.control.NonFatal
 
 // $COVERAGE-OFF$ This is actual code that we can't test, so we shouldn't report on it
 /**
-  * Provides the web server (spray-can) for the REST api in ``Api``, using the actor system
-  * defined in ``Core``.
-  *
-  * You may sometimes wish to construct separate ``ActorSystem`` for the web server machinery.
-  * However, for this simple application, we shall use the same ``ActorSystem`` for the
-  * entire application.
-  *
-  * Benefits of separate ``ActorSystem`` include the ability to use completely different
-  * configuration, especially when it comes to the threading model.
-  */
+ * Provides the web server (spray-can) for the REST api in ``Api``, using the actor system
+ * defined in ``Core``.
+ *
+ * You may sometimes wish to construct separate ``ActorSystem`` for the web server machinery.
+ * However, for this simple application, we shall use the same ``ActorSystem`` for the
+ * entire application.
+ *
+ * Benefits of separate ``ActorSystem`` include the ability to use completely different
+ * configuration, especially when it comes to the threading model.
+ */
 trait Web extends Config {
   this: Api with CoreActors with Core =>
 
@@ -44,7 +44,7 @@ trait Web extends Config {
 
   val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
     Http()
-      .bind(interface = config.getString("mealorama.host"), port = config.getInt("mealorama.port"))
+      .bind(interface = config.getString("full-scala-stack.host"), port = config.getInt("full-scala-stack.port"))
 
   val bindingFuture: Future[Http.ServerBinding] =
     serverSource

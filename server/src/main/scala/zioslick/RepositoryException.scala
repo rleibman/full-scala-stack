@@ -16,5 +16,4 @@
 
 package zioslick
 
-case class RepositoryException(msg: String = "", cause: Option[Throwable] = None)
-    extends Exception(msg, cause.orNull)
+case class RepositoryException(msg: String = "", cause: Option[Throwable] = None) extends Exception(msg, cause.orNull)

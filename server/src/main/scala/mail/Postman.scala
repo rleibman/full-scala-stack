@@ -1,7 +1,7 @@
 package mail
 
 import com.typesafe.config.Config
-import courier.{Envelope, Mailer}
+import courier.{ Envelope, Mailer }
 import zio.ZIO
 
 trait Postman {
@@ -14,9 +14,9 @@ object Postman {
   }
 }
 
-trait LivePostman extends Postman  {
+trait LivePostman extends Postman {
   val configKey: String
-  val config:Config
+  val config: Config
 
   override val postman: Postman.Service[Any] = new Postman.Service[Any] {
     lazy val mailer: Mailer = {
@@ -31,8 +31,7 @@ trait LivePostman extends Postman  {
           .auth(auth)()
     }
 
-      override def deliver(email: Envelope): ZIO[Any, Throwable, Unit]= {
-        ZIO.fromFuture(implicit ec => mailer(email))
-      }
+    override def deliver(email: Envelope): ZIO[Any, Throwable, Unit] =
+      ZIO.fromFuture(implicit ec => mailer(email))
   }
 }

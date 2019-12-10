@@ -34,8 +34,7 @@ snapshots
 # Log files
 *.log
 
-meal-o-rama/*
-
 *.lock
 
-docs
+dist
+debugDist

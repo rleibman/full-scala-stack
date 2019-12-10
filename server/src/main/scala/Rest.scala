@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import api.{Api, LiveEnvironment}
-import core.{BootedCore, CoreActors}
+import api.{ Api, LiveEnvironment }
+import core.{ BootedCore, CoreActors }
 import web.Web
 
 import scala.concurrent.ExecutionContext

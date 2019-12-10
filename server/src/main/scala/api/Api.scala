@@ -16,15 +16,15 @@
 
 package api
 
-import akka.http.scaladsl.server.{Route, RouteConcatenation}
-import core.{Core, CoreActors}
+import akka.http.scaladsl.server.{ Route, RouteConcatenation }
+import core.{ Core, CoreActors }
 
 import scala.concurrent.ExecutionContext
 
 /**
-  * @author rleibman
-  */
-trait Api extends RouteConcatenation  { this: CoreActors with Core =>
+ * @author rleibman
+ */
+trait Api extends RouteConcatenation { this: CoreActors with Core =>
 
   val service: MealORamaService = new MealORamaService {
     override implicit val dbExecutionContext: ExecutionContext = actorSystem.dispatcher

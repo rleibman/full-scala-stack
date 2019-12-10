@@ -20,7 +20,7 @@ import better.files.File
 import com.typesafe.config.ConfigFactory
 
 trait Config {
-  val configKey = "mealorama"
+  val configKey = "full-scala-stack"
   val config: com.typesafe.config.Config = {
     val confFileName =
       System.getProperty("application.conf", "./src/main/resources/application.conf")

@@ -27,11 +27,11 @@ trait ZioSlickSupport {
     for {
       db <- ZIO.accessM[DatabaseProvider](_.databaseProvider.db)
       r <- ZIO
-        .fromFuture(implicit ec => db.run(dbio))
-        .mapError {
-          case e: SlickException => RepositoryException("Slick Repository Error", Some(e))
-          case e: SQLException   => RepositoryException("SQL Repository Error", Some(e))
-        }
+            .fromFuture(implicit ec => db.run(dbio))
+            .mapError {
+              case e: SlickException => RepositoryException("Slick Repository Error", Some(e))
+              case e: SQLException   => RepositoryException("SQL Repository Error", Some(e))
+            }
     } yield r
 
   def from[R](zio: IO[Throwable, R])(): DBIOAction[R, NoStream, Effect] = {

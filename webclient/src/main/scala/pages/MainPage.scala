@@ -17,7 +17,7 @@
 package pages
 
 import components.AbstractComponent
-import japgolly.scalajs.react.{BackendScope, ScalaComponent}
+import japgolly.scalajs.react.{ BackendScope, ScalaComponent }
 import japgolly.scalajs.react.component.Scala.Unmounted
 import japgolly.scalajs.react.vdom.html_<^._
 
