@@ -48,7 +48,10 @@ of it's zio-like Callback (it would be even better if it actually morphed to use
 give slinky a strong consideration, at least at first reading it seems a bit easier to use.
 Alternatives: https://github.com/shadaj/slinky
 
-## scalablytyped
+## scalablytyped (https://github.com/oyvindberg/ScalablyTyped)
+An amazing project (that I've participated in, so I'm biased) that takes every typescript project from http://definitelytyped.org/ and 
+creates scala bindings for it. For React projects you can choose slinky or scalajs-react flavors. Also, coming soon, an sbt 
+plugin that let's you chose exactly what javascript libraries you want to wrap. 
 
 ## semantic ui (https://react.semantic-ui.com/)
 Alternatives: https://material-ui.com/, https://react-bootstrap.github.io/, http://nikgraf.github.io/belle/#/?_k=dyoot9
