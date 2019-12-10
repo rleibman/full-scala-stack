@@ -59,6 +59,10 @@ plugin that let's you chose exactly what javascript libraries you want to wrap.
 I really like how the set of react components from the semantic library look and feel, it's very themable as well.
 Alternatives: https://material-ui.com/, https://react-bootstrap.github.io/, http://nikgraf.github.io/belle/#/?_k=dyoot9
 
+## MySQL 
+I use mySQL mostly because I'm more familiar with it, switching the app to use something else should not be too difficult 
+Alternatives: mariadb, postgress, oracle, sql server, etc... or if you want to go nosql: cassandra, mongoDB  
+
 ## How the app is put together
 
 ### Configuring, compiling and running the app

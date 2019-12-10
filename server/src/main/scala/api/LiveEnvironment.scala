@@ -1,6 +1,6 @@
 package api
 
-import dao.{ LiveDatabaseProvider, LiveRecipeDAO }
+import dao.{ LiveDatabaseProvider, LiveModelDAO }
 import mail.LivePostman
 
-trait LiveEnvironment extends LiveDatabaseProvider with LiveRecipeDAO with LivePostman with Config {}
+trait LiveEnvironment extends LiveDatabaseProvider with LiveModelDAO with LivePostman with Config {}

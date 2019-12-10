@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext
  */
 trait Api extends RouteConcatenation { this: CoreActors with Core =>
 
-  val service: MealORamaService = new MealORamaService {
+  val service: FullStackScalaService = new FullStackScalaService {
     override implicit val dbExecutionContext: ExecutionContext = actorSystem.dispatcher
   }
 
