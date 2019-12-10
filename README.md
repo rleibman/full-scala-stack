@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/rleibman/full-scala-stack.svg?branch=master)](https://travis-ci.com/rleibman/full-scala-stack)
+
 # Full Scala Stack
 This is an example project that uses a full scala stack, server to client. 
 These are some of the technologies I'm using, I briefly describe why and mention some options in case my choices are not yours.
