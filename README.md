@@ -19,10 +19,10 @@ This is an example project that uses a full scala stack, server to client. I'm s
 
 ## Here's how to do some common tasks
 
-# Add a new web page
+### Add a new web page
 
-# Add a new model object
+### Add a new model object
 
-# Add a new javascript library
+### Add a new javascript library
 
-# Add a new set of REST 
+### Add a new set of REST 
