@@ -54,7 +54,12 @@ creates scala bindings for it. For React projects you can choose slinky or scala
 plugin that let's you chose exactly what javascript libraries you want to wrap. 
 
 ## semantic ui (https://react.semantic-ui.com/)
+I really like how the set of react components from the semantic library look and feel, it's very themable as well.
 Alternatives: https://material-ui.com/, https://react-bootstrap.github.io/, http://nikgraf.github.io/belle/#/?_k=dyoot9
+
+## How the app is put together
+
+### Configuring, compiling and running the app
 
 ## Here's how to do some common tasks
 
