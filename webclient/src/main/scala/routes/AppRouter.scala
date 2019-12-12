@@ -41,37 +41,38 @@ object AppRouter extends AbstractComponent {
 
   case object MainPageData extends AppPageData
 
-  private def setEH(c: RouterCtl[AppPageData], target: AppPageData) = {
-    (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
-      c.setEH(target)(event)
-  }
+//  private def setEH(c: RouterCtl[AppPageData], target: AppPageData) = {
+//    (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
+//      c.setEH(target)(event)
+//  }
 
   private def layout(page: RouterCtl[AppPageData], resolution: Resolution[AppPageData]) = {
     assert(page != null)
-    <.div(
-      ^.height := 100.pct,
-      <.div(
-        ^.height := 100.pct,
-        ^.className := "full height",
-        ^.display := "flex",
-        ^.flexDirection := "row",
-        <.div(
-          ^.height := 100.pct,
-          ^.className := "no-print",
-          ^.flex := "0 0  auto",
-          ^.position := "relative",
-          Menu(vertical = true)(
-            MenuItem(
-              active = resolution.page == MainPageData,
-              onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
-                page.setEH(MainPageData)(event)
-              }
-            )("Main Page")
-          )
-        )
-      ),
-      <.div(^.flex := "1 1  auto", resolution.render())
-    )
+    <.div("")
+//    <.div(
+//      ^.height := 100.pct,
+//      <.div(
+//        ^.height := 100.pct,
+//        ^.className := "full height",
+//        ^.display := "flex",
+//        ^.flexDirection := "row",
+//        <.div(
+//          ^.height := 100.pct,
+//          ^.className := "no-print",
+//          ^.flex := "0 0  auto",
+//          ^.position := "relative",
+//          Menu(vertical = true)(
+//            MenuItem(
+//              active = resolution.page == MainPageData,
+//              onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
+//                page.setEH(MainPageData)(event)
+//              }
+//            )("Main Page")
+//          )
+//        )
+//      ),
+//      <.div(^.flex := "1 1  auto", resolution.render())
+//    )
   }
 
   private val config: RouterConfig[AppPageData] = RouterConfigDsl[AppPageData].buildConfig { dsl =>
