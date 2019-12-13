@@ -5,6 +5,9 @@ import zio.macros.annotation.accessible
 import zioslick.{ DatabaseProvider, RepositoryException, SlickZIO }
 import model.SampleModelObject
 
+/**
+ * This trait defines all of the Model's database methods.
+ */
 //@accessible
 //@mockable
 trait ModelDAO {

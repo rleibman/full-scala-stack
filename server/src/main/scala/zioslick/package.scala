@@ -17,6 +17,7 @@
 import zio.ZIO
 
 package object zioslick {
+  /** Defines a type of ZIO that has a database provider runtime **/
   type SlickZIO[+A] = ZIO[DatabaseProvider, RepositoryException, A]
 
 }

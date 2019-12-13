@@ -5,7 +5,10 @@ import slick.jdbc.JdbcBackend._
 import zio.{ UIO, ZIO }
 import zioslick.DatabaseProvider
 
-trait LiveDatabaseProvider extends DatabaseProvider {
+/**
+ * Live database provider that provides a MySQL database, with a very specific configuration
+ */
+trait MySQLDatabaseProvider extends DatabaseProvider {
   val configKey: String
 
   override val databaseProvider: DatabaseProvider.Service = new DatabaseProvider.Service {

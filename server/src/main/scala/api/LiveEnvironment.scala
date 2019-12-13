@@ -1,6 +1,13 @@
 package api
 
-import dao.{ LiveDatabaseProvider, LiveModelDAO }
-import mail.LivePostman
+import dao.{MySQLDatabaseProvider, LiveModelDAO}
+import mail.CourierPostman
 
-trait LiveEnvironment extends LiveDatabaseProvider with LiveModelDAO with LivePostman with Config {}
+/**
+ * This Creates a live environment, with actual running stuff (real email, real database, etc)
+ */
+trait LiveEnvironment
+  extends MySQLDatabaseProvider
+    with LiveModelDAO
+    with CourierPostman
+    with Config {}

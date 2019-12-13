@@ -11,7 +11,18 @@ import de.heikoseeberger.akkahttpupickle.UpickleSupport
 
 import scala.concurrent.ExecutionContext
 
-abstract class FullStackScalaService extends Directives  with LiveEnvironment with UpickleSupport with ModelPickler with ZIODirectives {
+/**
+ * This is the main "service" that concatenates all of the routes of all of the sub-services
+ */
+abstract class FullStackScalaService extends
+  Directives
+  with LiveEnvironment
+  with UpickleSupport
+  with ModelPickler
+  with ZIODirectives
+  with ModelService
+  //TODO If you split your full route into different services, add them here
+  with HTMLService {
   private val runtime = new DefaultRuntime() {}
 
   val route: Route = DebuggingDirectives.logRequest("Request") {
@@ -23,31 +34,7 @@ abstract class FullStackScalaService extends Directives  with LiveEnvironment wi
         zio.provide(this)
       }
     } ~
-      path("sampleModelObjects") {
-        complete(modelDAO.sampleModelObjects())
-      } ~
-    pathPrefix("sampleModelObject") {
-      (post | put) {
-        entity(as[SampleModelObject]) { obj =>
-          complete(modelDAO.upsert(obj))
-        }
-      } ~
-      path(".*".r) { id =>
-        get {
-          complete {
-            modelDAO.sampleModelObject(id.toInt)
-          }
-        } ~
-          delete {
-            complete {
-              for {
-                modelOpt <- modelDAO.sampleModelObject(id.toInt)
-                deleted   <- ZIO.traverse(modelOpt.toSeq)(modelDAO.delete)
-              } yield deleted
-
-            }
-          }
-      }
-    }
+    modelRoute ~
+    htmlRoute
   }
 }

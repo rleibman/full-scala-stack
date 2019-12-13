@@ -66,13 +66,37 @@ Alternatives: mariadb, postgress, oracle, sql server, etc... or if you want to g
 ## How the app is put together
 
 ### Configuring, compiling and running the app
+#### Database
+You'll need to have mysql running, if you want to try it first without a database, you can always replace the ```LiveModelDAO``` in ```api.LiveEnvironment``` with
+```MockModelDAO```
+To initialize the database, just run the scripts in the ```server/src/main/sql``` directory in order. 
+Once you do that, you should configure the access to the database in ```server/src/main/resources/application.conf```, change the database url, username and password as needed
+
+#### Server
+In general a few parameters in ```server/src/main/resources/application.conf``` will control the application, tell it what port to run on, where to find the static web pages (the ```staticContentDir``` variable), etc.
+Once all is configured, in sbt, you should be able to run:
+```sbt
+  ~server/reStart
+```
+This will start the server, any changes you make will automatically be recompiled and the server restarted.  
+
+#### Web client
+You need to compile all of the scala.js code into a nicely packaged js file. There's a ```dist``` command and a ```debugDist``` command, the first one 
+does full optimization, but it's resulting file will be both harder to read and it will take longer to generate, use the second one for development.
 
 ## Here's how to do some common tasks
 
 ### Add a new web page
 
 ### Add a new model object
+- Add the model object itself in ```shared/src/main/scala/model``` typically these objects are scala case classes
+- Add the database creation code for your object (I like to put these as sql scripts in ```server/src/main/sql```), run it against your database
+- Use util.CodeGen to re-generate Tables.scala which will contain the stuff that maps your SQL database with our model.
+- Add the CRUD (and other) database operations to ```src/main/scala/dao/ModelDAO```, you'll have to create "live" and "mock" versions of all the methods you create
+- Add a service that does basic REST crud operations about your object in ```server/src/main/scala/api```, look at ```ModelService``` as an example
+- Add the web pages you need to do stuff with your new object (see above)
 
 ### Add a new javascript library
-
-### Add a new set of REST 
+Assuming you are using ScalablyTyped, you need to add to ```build.sbt``` the typings for the javascript library (read the [ScalablyTyped documentation](https://github.com/oyvindberg/ScalablyTyped) ), as well as adding the library itself to the bundler (the ```npmDependencies``` section).
+If the library is a react library, you should choose a flavor of react bindings (currently either japgolly or Slinky bindings).
+Once you do that you should be good to go!

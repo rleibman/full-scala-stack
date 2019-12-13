@@ -4,6 +4,10 @@ import com.typesafe.config.Config
 import courier.{ Envelope, Mailer }
 import zio.ZIO
 
+/**
+ * A trait that knows how to deliver email, and uses ZIO
+ * //TODO Might want to move to a separate project.
+ */
 trait Postman {
   val postman: Postman.Service[Any]
 }
@@ -14,7 +18,10 @@ object Postman {
   }
 }
 
-trait LivePostman extends Postman {
+/**
+ * An instatiation of the Postman that user the courier mailer
+ */
+trait CourierPostman extends Postman {
   val configKey: String
   val config: Config
 

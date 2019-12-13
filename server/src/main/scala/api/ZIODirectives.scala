@@ -27,6 +27,9 @@ import zio.{ DefaultRuntime, Task, ZIO }
 import scala.concurrent.{ Future, Promise }
 import scala.util.{ Failure, Success }
 
+/**
+ * A special set of akka-http directives that take ZIOs, run them and marshalls them.
+ */
 trait ZIODirectives extends DefaultRuntime {
   import RouteDirectives._
 

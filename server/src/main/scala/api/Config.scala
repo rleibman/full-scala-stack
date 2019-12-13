@@ -19,6 +19,9 @@ package api
 import better.files.File
 import com.typesafe.config.ConfigFactory
 
+/**
+ * A trait to keep app configuration
+ */
 trait Config {
   val configKey = "full-scala-stack"
   val config: com.typesafe.config.Config = {

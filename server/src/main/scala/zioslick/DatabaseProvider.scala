@@ -19,6 +19,9 @@ package zioslick
 import slick.basic.BasicBackend
 import zio.UIO
 
+/**
+ * A trait used to select with databaseProvider will be used (a database provider gives the application the Slick database it'll need)
+ */
 trait DatabaseProvider {
   def databaseProvider: DatabaseProvider.Service
 }

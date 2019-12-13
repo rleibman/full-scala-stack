@@ -22,6 +22,7 @@ import core.{ Core, CoreActors }
 import scala.concurrent.ExecutionContext
 
 /**
+ *
  * @author rleibman
  */
 trait Api extends RouteConcatenation { this: CoreActors with Core =>

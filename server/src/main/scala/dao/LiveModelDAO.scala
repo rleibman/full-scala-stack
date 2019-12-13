@@ -8,6 +8,10 @@ import zioslick.{DatabaseProvider, RepositoryException, ZioSlickSupport}
 
 import scala.concurrent.ExecutionContext
 
+/**
+ * Implements the model's database methods using slick and a given database provider
+ * Note that it isn't fully detached from MySQL, unfortunately, that would be nice
+ */
 trait LiveModelDAO extends ModelDAO with ZioSlickSupport with DatabaseProvider  {
   self =>
 
@@ -19,17 +23,15 @@ trait LiveModelDAO extends ModelDAO with ZioSlickSupport with DatabaseProvider  
   override def modelDAO: ModelDAO.Service = new ModelDAO.Service with ModelSlickInterop {
     import Tables._
 
-    def me: DBIO[Int] = sql"SELECT count(*) FROM recipe".as[Int].head
+    def me: DBIO[Int] = sql"SELECT count(*) FROM SampleModelObject".as[Int].head
 
-    override def count: IO[RepositoryException, Int] = sql"SELECT count(*) FROM recipe".as[Int].head
+    override def count: IO[RepositoryException, Int] = sql"SELECT count(*) FROM SampleModelObject".as[Int].head
 
     override def report: IO[RepositoryException, String] = {
       for {
-        recipeCount <- sql"SELECT count(*) FROM recipe".as[Int].head
-        groceryItemCount <- sql"SELECT count(*) FROM GroceryItem".as[Int].head
+        count <- sql"SELECT count(*) FROM SampleModelObject".as[Int].head
       } yield {
-        s"""Recipes = $recipeCount
-           |GroceryItems = $groceryItemCount
+        s"""SampleModelObject = $count
            |""".stripMargin
       }
     }
