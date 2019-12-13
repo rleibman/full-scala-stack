@@ -7,7 +7,7 @@ import model.SampleModelObject
 import scala.concurrent.ExecutionContext
 
 object CodeGen extends LiveEnvironment
- with App
+// with App
 {
   override implicit val dbExecutionContext: ExecutionContext = ExecutionContext.Implicits.global
 
@@ -19,7 +19,7 @@ object CodeGen extends LiveEnvironment
       "slick.jdbc.MySQLProfile",                                                                                                                                                       //profile
       "com.mysql.cj.jdbc.Driver",                                                                                                                                                      //jdbc driver
       "jdbc:mysql://localhost:3306/fullscalastack?current_schema=fullscalastack&nullNamePatternMatchesAll=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", //url
-      "/Volumes/Personal/projects/meal-o-rama/full-scala-stack/server/src/main/scala",                                                                                                      //destination dir
+      "/Volumes/Personal/projects/full-scala-stack/server/src/main/scala",                                                                                                      //destination dir
       "dao",                                                                                                                                                                           //package
       "root",                                                                                                                                                                          //user
       ""
