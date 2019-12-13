@@ -13,6 +13,9 @@ addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "6.0.0")
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Web client
+resolvers += Resolver.bintrayRepo("oyvindberg", "ScalajsReactTyped")
+
+addSbtPlugin("org.scalablytyped.japgolly" % "sbt-scalajsreacttyped" % "201912121209")
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.31")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.15.0-0.6")
 

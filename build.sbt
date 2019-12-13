@@ -81,7 +81,7 @@ lazy val server = project
 lazy val webclient = project
   .in(file("webclient"))
   .dependsOn(shared)
-  .enablePlugins(ScalaJSPlugin, AutomateHeaderPlugin, GitVersioning, BuildInfoPlugin)
+  .enablePlugins(ScalaJSPlugin, ScalajsReactTypedPlugin, AutomateHeaderPlugin, GitVersioning, BuildInfoPlugin)
   .configure(bundlerSettings)
   .settings(gitSettings, buildInfoSettings)
   .settings(
@@ -99,7 +99,10 @@ lazy val webclient = project
       FileUtils.copyDirectory(assets, distFolder, true)
       distFolder
     },
+    resolvers += Resolver.bintrayRepo("oyvindberg", "ScalajsReactTyped"),
     libraryDependencies ++= Seq(
+      ScalajsReactTyped.S.`semantic-ui-react`,
+      ScalajsReactTyped.S.`stardust-ui__react-component-ref`,
       "commons-io" % "commons-io" % "2.6" withSources(),
       "ru.pavkin" %%% "scala-js-momentjs" % "0.10.0" withSources(),
       "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3" withSources(),
