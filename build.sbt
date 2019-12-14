@@ -2,13 +2,17 @@
 // Common Stuff
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 import org.apache.commons.io.FileUtils
 
 lazy val root = project
-  .aggregate(server, shared, webclient)
+  .in(file("."))
+  .aggregate(server, commonJS, commonJVM, webclient)
   .settings(
-    Global / onChangedBuildSource := IgnoreSourceChanges
+    publish := {},
+    publishLocal := {},
+    Global / onChangedBuildSource := ReloadOnSourceChanges,
   )
 
 lazy val buildInfoSettings =
@@ -22,10 +26,24 @@ lazy val gitSettings =
     git.useGitDescribe := true
   )
 
+ThisBuild / name := "full-scala-stack"
+ThisBuild /organization := "net.leibman"
+ThisBuild /scalaVersion := "2.12.10"
+
 ////////////////////////////////////////////////////////////////////////////////////
-// Shared (i.e. model)
-lazy val shared = project
-  .in(file("shared"))
+// common (i.e. model)
+lazy val common =
+  crossProject(JSPlatform, JVMPlatform)
+    .in(file("common"))
+    .jvmSettings(
+        libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "0.6.31" % "provided"
+    )
+    .jsSettings(
+    // Add JS-specific settings here
+    )
+
+lazy val commonJVM = common.jvm
+lazy val commonJS = common.js
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Server
@@ -41,12 +59,8 @@ lazy val debugDist = TaskKey[File]("debugDist")
 
 lazy val server = project
   .in(file("server"))
-  .dependsOn(shared)
+  .dependsOn(commonJVM)
   .settings(
-    inThisBuild(List(
-      organization := "net.leibman",
-      scalaVersion := "2.12.10"
-    )),
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % "1.0.0-RC17" withSources(),
       "dev.zio" %% "zio-macros-core" % "0.6.0" withSources(),
@@ -78,12 +92,13 @@ lazy val server = project
 // Web client
 lazy val webclient = project
   .in(file("webclient"))
-  .dependsOn(shared)
+  .dependsOn(commonJS)
   .enablePlugins(ScalaJSPlugin, ScalajsReactTypedPlugin, AutomateHeaderPlugin, GitVersioning, BuildInfoPlugin)
   .configure(bundlerSettings)
   .settings(gitSettings, buildInfoSettings)
   .settings(
     debugDist := {
+
       val assets = (ThisBuild / baseDirectory).value / "webclient" / "src" / "main" / "web"
 
       val artifacts = (Compile / fastOptJS / webpack).value

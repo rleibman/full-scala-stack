@@ -28,9 +28,16 @@ import org.scalajs.dom.ext.{ Ajax, AjaxException }
 import org.scalajs.dom.raw.HTMLAnchorElement
 import pages.MainPage
 import upickle.default.read
+import typingsJapgolly.semanticDashUiDashReact.distCommonjsCollectionsMenuMenuItemMod._
+import typingsJapgolly.semanticDashUiDashReact.components._
 
 import scala.concurrent.Future
 
+/**
+ * The app's router. It has two main responsibilities:
+ * - Present an app menu
+ * - Choose which "page" to present depending on the route (i.e. the url)
+ */
 object AppRouter extends AbstractComponent {
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,38 +48,37 @@ object AppRouter extends AbstractComponent {
 
   case object MainPageData extends AppPageData
 
-//  private def setEH(c: RouterCtl[AppPageData], target: AppPageData) = {
-//    (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
-//      c.setEH(target)(event)
-//  }
+  private def setEH(c: RouterCtl[AppPageData], target: AppPageData) = {
+    (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
+      c.setEH(target)(event)
+  }
 
   private def layout(page: RouterCtl[AppPageData], resolution: Resolution[AppPageData]) = {
     assert(page != null)
-    <.div("")
-//    <.div(
-//      ^.height := 100.pct,
-//      <.div(
-//        ^.height := 100.pct,
-//        ^.className := "full height",
-//        ^.display := "flex",
-//        ^.flexDirection := "row",
-//        <.div(
-//          ^.height := 100.pct,
-//          ^.className := "no-print",
-//          ^.flex := "0 0  auto",
-//          ^.position := "relative",
-//          Menu(vertical = true)(
-//            MenuItem(
-//              active = resolution.page == MainPageData,
-//              onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
-//                page.setEH(MainPageData)(event)
-//              }
-//            )("Main Page")
-//          )
-//        )
-//      ),
-//      <.div(^.flex := "1 1  auto", resolution.render())
-//    )
+    <.div(
+      ^.height := 100.pct,
+      <.div(
+        ^.height := 100.pct,
+        ^.className := "full height",
+        ^.display := "flex",
+        ^.flexDirection := "row",
+        <.div(
+          ^.height := 100.pct,
+          ^.className := "no-print",
+          ^.flex := "0 0  auto",
+          ^.position := "relative",
+          Menu(vertical = true)(
+            MenuItem(
+              active = resolution.page == MainPageData,
+              onClick = { (event: ReactMouseEventFrom[HTMLAnchorElement], data: MenuItemProps) =>
+                page.setEH(MainPageData)(event)
+              }
+            )("Main Page")
+          )
+        ),
+        <.div(^.flex := "1 1  auto", resolution.render())
+      )
+    )
   }
 
   private val config: RouterConfig[AppPageData] = RouterConfigDsl[AppPageData].buildConfig { dsl =>
@@ -99,7 +105,7 @@ object AppRouter extends AbstractComponent {
     )
 
     (trimSlashes
-      | staticRoute("#newRecipe", MainPageData) ~> renderR(ctrl => MainPage()))
+      | staticRoute("#mainPage", MainPageData) ~> renderR(ctrl => MainPage()))
       .notFound(redirectToPage(MainPageData)(Redirect.Replace))
       .renderWith(layout)
   }

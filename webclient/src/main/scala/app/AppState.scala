@@ -19,6 +19,9 @@ package app
 import japgolly.scalajs.react.React
 import japgolly.scalajs.react.React.Context
 
+/**
+ * We put all global app state here, things like the current session, user name, theme, configuration, etc.
+ */
 case class AppState(
   //Add global app state here
 )

@@ -23,6 +23,9 @@ import routes.AppRouter
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 
+/**
+ * This is the main scalajs app, it loads the content into a dom item called content
+ */
 object MainApp {
   @JSExport
   def main(args: Array[String]): Unit = {

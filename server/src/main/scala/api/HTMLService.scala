@@ -17,13 +17,16 @@
 package api
 
 import akka.http.scaladsl.server.directives.ContentTypeResolver
-import akka.http.scaladsl.server.{ Directives, Route }
+import akka.http.scaladsl.server.{Directives, Route}
+import better.files.File
 
 /**
  * This service serves the site's static content, including the scala.js generated content
  */
 trait HTMLService extends Directives with Config {
   val staticContentDir: String = config.getString("full-scala-stack.staticContentDir")
+
+  val dir = File(staticContentDir)
 
   override def getFromDirectory(
       directoryName: String

@@ -72,6 +72,9 @@ You'll need to have mysql running, if you want to try it first without a databas
 To initialize the database, just run the scripts in the ```server/src/main/sql``` directory in order. 
 Once you do that, you should configure the access to the database in ```server/src/main/resources/application.conf```, change the database url, username and password as needed
 
+### Shared code
+The common subproject gets compiled in both jvm and js flavors, this is where I typically put my model, since I want to be able  to share it between subprojects of both types 
+
 #### Server
 In general a few parameters in ```server/src/main/resources/application.conf``` will control the application, tell it what port to run on, where to find the static web pages (the ```staticContentDir``` variable), etc.
 Once all is configured, in sbt, you should be able to run:
@@ -85,11 +88,13 @@ You need to compile all of the scala.js code into a nicely packaged js file. The
 does full optimization, but it's resulting file will be both harder to read and it will take longer to generate, use the second one for development.
 
 ## Here's how to do some common tasks
+Note that I've put a bunch of "//TODO"s throughout the code that in places where I think you can expand or put additional stuff.
 
 ### Add a new web page
+For the most part, I follow the architecture laid out by [scalajs-react](https://github.com/japgolly/scalajs-react/blob/master/doc/ROUTER.md), the documentation there is pretty awesome.
 
 ### Add a new model object
-- Add the model object itself in ```shared/src/main/scala/model``` typically these objects are scala case classes
+- Add the model object itself in ```common/shared/src/main/scala/model``` typically these objects are scala case classes
 - Add the database creation code for your object (I like to put these as sql scripts in ```server/src/main/sql```), run it against your database
 - Use util.CodeGen to re-generate Tables.scala which will contain the stuff that maps your SQL database with our model.
 - Add the CRUD (and other) database operations to ```src/main/scala/dao/ModelDAO```, you'll have to create "live" and "mock" versions of all the methods you create
@@ -100,3 +105,21 @@ does full optimization, but it's resulting file will be both harder to read and 
 Assuming you are using ScalablyTyped, you need to add to ```build.sbt``` the typings for the javascript library (read the [ScalablyTyped documentation](https://github.com/oyvindberg/ScalablyTyped) ), as well as adding the library itself to the bundler (the ```npmDependencies``` section).
 If the library is a react library, you should choose a flavor of react bindings (currently either japgolly or Slinky bindings).
 Once you do that you should be good to go!
+
+## Testing
+Most of this project is boilerplate, so *by definition* there's not much to test. The question is always "what to test?". Business logic of course. In this architecture business logic resides in the following places:
+- The server's Service classes. I suggest you keep your routes simple and create either methods within those classes or separate business class logic. I'll write a couple of tests to show how to test the routes
+- The database specific ModelDAO... because Slick is not a full ORM library, a lot of the mapping from Relational to OO happens in the DAO, it's a good idea to test these. 
+  //TODO figure out if we can use this https://scala-slick.org/doc/3.3.1/testkit.html or if we need to write all of our ModelDAO tests in integration testing
+- The web application itself, I personally find it very hard to write unit tests against user interface, you should read:
+    - https://www.scala-js.org/libraries/testing.html
+    - https://github.com/japgolly/scalajs-react/blob/master/doc/TESTING.md
+
+## Production
+Creating production artifacts is a bit beyond the scope of this project (it's meant to get you started, not to get you finished). However I do use sbt-native-packager to create
+a debian package of the server portion. I'd like to integrate that to create a full package that also includes the web application.  
+    
+## Acknowledgements
+- This [blog post](https://scalac.io/making-zio-akka-slick-play-together-nicely-part-1-zio-and-slick/) uses a stack that's very similar to the one described here, I borrowed from it extensively, mostly in it's use of zio.
+- [Oyvindberg](https://github.com/oyvindberg) has been super, super helpful with not only the ScalablyTyped project but with looking over my shoulder as I make mistakes. 
+- All the people from all the projects above that work to make the scala culture so amazing!

@@ -4,6 +4,7 @@ import akka.http.scaladsl.server.Directives
 import dao.ModelDAO
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
 import model.SampleModelObject
+import util.ModelPickler
 import zio.ZIO
 
 /**

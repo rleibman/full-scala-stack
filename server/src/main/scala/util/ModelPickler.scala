@@ -1,7 +1,6 @@
-package api
+package util
 
 import model.SampleModelObject
-import ujson._
 import upickle.default.{macroRW, ReadWriter => RW, _}
 
 /**

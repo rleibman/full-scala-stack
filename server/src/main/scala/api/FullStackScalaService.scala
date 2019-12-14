@@ -8,6 +8,7 @@ import model.SampleModelObject
 import zio.{DefaultRuntime, ZIO}
 import zioslick.SlickZIO
 import de.heikoseeberger.akkahttpupickle.UpickleSupport
+import _root_.util.ModelPickler
 
 import scala.concurrent.ExecutionContext
 

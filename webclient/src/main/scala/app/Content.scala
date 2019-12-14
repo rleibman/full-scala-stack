@@ -38,6 +38,12 @@ import japgolly.scalajs.react.component.Scala.Unmounted
 import japgolly.scalajs.react.vdom.html_<^._
 import routes.AppRouter
 
+/**
+ * This is a helper class meant to load initial app state, scalajs-react normally
+ * suggests (and rightfully so) that the router should be the main content of the app,
+ * but having a middle piece that loads app state makes some sense, that way the router is in charge of routing and
+ * presenting the app menu.
+ */
 object Content extends AbstractComponent {
   case class State(appState: AppState = AppState())
 
