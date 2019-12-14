@@ -1,9 +1,9 @@
+////////////////////////////////////////////////////////////////////////////////////
+// Common Stuff
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 import org.apache.commons.io.FileUtils
-////////////////////////////////////////////////////////////////////////////////////
-// Common Stuff
 
 lazy val root = project
   .aggregate(server, shared, webclient)
@@ -23,10 +23,9 @@ lazy val gitSettings =
   )
 
 ////////////////////////////////////////////////////////////////////////////////////
-// Shared
+// Shared (i.e. model)
 lazy val shared = project
   .in(file("shared"))
-
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Server
@@ -39,7 +38,6 @@ lazy val start = TaskKey[Unit]("start")
 lazy val dist = TaskKey[File]("dist")
 
 lazy val debugDist = TaskKey[File]("debugDist")
-
 
 lazy val server = project
   .in(file("server"))
@@ -86,17 +84,45 @@ lazy val webclient = project
   .settings(gitSettings, buildInfoSettings)
   .settings(
     debugDist := {
+      val assets = (ThisBuild / baseDirectory).value / "webclient" / "src" / "main" / "web"
+
+      val artifacts = (Compile / fastOptJS / webpack).value
+      val artifactFolder = (Compile / fastOptJS / crossTarget).value
       val debugFolder = (ThisBuild / baseDirectory).value / "debugDist"
+
       debugFolder.mkdirs()
-      val assets = (ThisBuild / baseDirectory).value / "web"
       FileUtils.copyDirectory(assets, debugFolder, true)
+      artifacts.foreach { artifact =>
+        val target = artifact.data.relativeTo(artifactFolder) match {
+          case None => debugFolder / artifact.data.name
+          case Some(relFile) => debugFolder / relFile.toString
+        }
+
+        println(s"Trying to copy ${artifact.data.toPath} to ${target.toPath}")
+        Files.copy(artifact.data.toPath, target.toPath, REPLACE_EXISTING)
+      }
+
       debugFolder
     },
     dist := {
+      val assets = (ThisBuild / baseDirectory).value / "webclient" / "src" / "main" / "web"
+
+      val artifacts = (Compile / fullOptJS / webpack).value
+      val artifactFolder = (Compile / fullOptJS / crossTarget).value
       val distFolder = (ThisBuild / baseDirectory).value / "dist"
+
       distFolder.mkdirs()
-      val assets = (ThisBuild / baseDirectory).value / "web"
       FileUtils.copyDirectory(assets, distFolder, true)
+      artifacts.foreach { artifact =>
+        val target = artifact.data.relativeTo(artifactFolder) match {
+          case None => distFolder / artifact.data.name
+          case Some(relFile) => distFolder / relFile.toString
+        }
+
+        println(s"Trying to copy ${artifact.data.toPath} to ${target.toPath}")
+        Files.copy(artifact.data.toPath, target.toPath, REPLACE_EXISTING)
+      }
+
       distFolder
     },
     resolvers += Resolver.bintrayRepo("oyvindberg", "ScalajsReactTyped"),
@@ -152,7 +178,7 @@ lazy val bundlerSettings: Project => Project =
       Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
       Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
       useYarn := false,
-      jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv,
+      //      jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv,
       fork in run := true,
       scalaJSStage in Global := FastOptStage,
       scalaJSUseMainModuleInitializer in Compile := true,
@@ -164,18 +190,17 @@ lazy val bundlerSettings: Project => Project =
       artifactPath
         .in(Compile, fullOptJS) := ((crossTarget in(Compile, fullOptJS)).value /
         ((moduleName in fullOptJS).value + "-opt.js")),
-      webpackConfigFile := Some(baseDirectory.value / "custom.webpack.config.js"),
       webpackEmitSourceMaps := true,
-      //enableReloadWorkflow := false,
       Compile / npmDependencies ++= Seq(
+        //        "jsdom"-> "^15.0.0",
         "react-dom" -> "16.9",
         "@types/react-dom" -> "16.9.1",
         "react" -> "16.9",
         "@types/react" -> "16.9.5",
-        "semantic-ui-react" -> "0.88.1",
-        "moment" -> "2.24.0",
+        "semantic-ui-react" -> "0.88.1"
       ),
       npmDevDependencies.in(Compile) := Seq(
+        //        "jsdom"-> "^15.0.0",
         "style-loader" -> "0.23.1",
         "css-loader" -> "2.1.0",
         "sass-loader" -> "7.1.0",
