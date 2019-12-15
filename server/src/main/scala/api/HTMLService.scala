@@ -17,7 +17,7 @@
 package api
 
 import akka.http.scaladsl.server.directives.ContentTypeResolver
-import akka.http.scaladsl.server.{Directives, Route}
+import akka.http.scaladsl.server.{ Directives, Route }
 import better.files.File
 
 /**
@@ -29,7 +29,7 @@ trait HTMLService extends Directives with Config {
   val dir = File(staticContentDir)
 
   override def getFromDirectory(
-      directoryName: String
+    directoryName: String
   )(implicit resolver: ContentTypeResolver): Route =
     extractUnmatchedPath { unmatchedPath =>
       getFromFile(s"$staticContentDir/$unmatchedPath")
@@ -41,11 +41,11 @@ trait HTMLService extends Directives with Config {
         getFromFile(s"$staticContentDir/index.html")
       }
     } ~
-    get {
-      extractUnmatchedPath { path =>
-        encodeResponse {
-          getFromDirectory(staticContentDir)
+      get {
+        extractUnmatchedPath { path =>
+          encodeResponse {
+            getFromDirectory(staticContentDir)
+          }
         }
       }
-    }
 }

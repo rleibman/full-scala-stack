@@ -50,6 +50,7 @@ lazy val commonJS = common.js
 lazy val akkaVersion = "2.6.1"
 lazy val akkaHttpVersion = "10.1.11"
 lazy val slickVersion = "3.3.2"
+lazy val zioVersion = "1.0.0-RC17"
 
 lazy val start = TaskKey[Unit]("start")
 
@@ -59,10 +60,12 @@ lazy val debugDist = TaskKey[File]("debugDist")
 
 lazy val server = project
   .in(file("server"))
+  .configs(IntegrationTest)
   .dependsOn(commonJVM)
   .settings(
+    Defaults.itSettings,
     libraryDependencies ++= Seq(
-      "dev.zio" %% "zio" % "1.0.0-RC17" withSources(),
+      "dev.zio" %% "zio" % zioVersion withSources(),
       "dev.zio" %% "zio-macros-core" % "0.6.0" withSources(),
 
       "com.typesafe.slick" %% "slick" % slickVersion withSources(),
@@ -82,10 +85,14 @@ lazy val server = project
       "com.lihaoyi" %% "upickle" % "0.8.0" withSources(),
       "de.heikoseeberger" %% "akka-http-upickle" % "1.29.1" withSources(),
 
-      "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
-      "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
-      "org.scalatest" %% "scalatest" % "3.1.0" % Test
+      "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "it,test",
+      "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % "it,test",
+      "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % "it,test",
+      "org.scalatest" %% "scalatest" % "3.1.0" % "it,test",
+      "dev.zio" %% "zio-test"     % zioVersion % "it, test",
+      "dev.zio" %% "zio-test-sbt" % zioVersion % "it, test"
     ),
+    testFrameworks ++= Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
   )
 
 ////////////////////////////////////////////////////////////////////////////////////

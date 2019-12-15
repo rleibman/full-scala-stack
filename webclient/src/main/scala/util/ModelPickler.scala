@@ -17,7 +17,7 @@
 package util
 
 import model.SampleModelObject
-import upickle.default.{macroRW, ReadWriter => RW, _}
+import upickle.default.{ macroRW, ReadWriter => RW, _ }
 
 /**
  * Here's where we define all of the model object's picklers and unpicklers.

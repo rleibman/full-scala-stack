@@ -110,7 +110,7 @@ Once you do that you should be good to go!
 Most of this project is boilerplate, so *by definition* there's not much to test. The question is always "what to test?". Business logic of course. In this architecture business logic resides in the following places:
 - The server's Service classes. I suggest you keep your routes simple and create either methods within those classes or separate business class logic. I'll write a couple of tests to show how to test the routes
 - The database specific ModelDAO... because Slick is not a full ORM library, a lot of the mapping from Relational to OO happens in the DAO, it's a good idea to test these. 
-  //TODO figure out if we can use this https://scala-slick.org/doc/3.3.1/testkit.html or if we need to write all of our ModelDAO tests in integration testing
+  these are considered integration tests and are in the server/it path
 - The web application itself, I personally find it very hard to write unit tests against user interface, you should read:
     - https://www.scala-js.org/libraries/testing.html
     - https://github.com/japgolly/scalajs-react/blob/master/doc/TESTING.md

@@ -4,7 +4,7 @@ import model.SampleModelObject
 import slick.dbio.DBIO
 import slick.jdbc.MySQLProfile.api._
 import zio.IO
-import zioslick.{DatabaseProvider, RepositoryException, ZioSlickSupport}
+import zioslick.{ DatabaseProvider, RepositoryException, ZioSlickSupport }
 
 import scala.concurrent.ExecutionContext
 
@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext
  * Implements the model's database methods using slick and a given database provider
  * Note that it isn't fully detached from MySQL, unfortunately, that would be nice
  */
-trait LiveModelDAO extends ModelDAO with ZioSlickSupport with DatabaseProvider  {
+trait LiveModelDAO extends ModelDAO with ZioSlickSupport with DatabaseProvider {
   self =>
 
   implicit val dbExecutionContext: ExecutionContext
@@ -27,14 +27,13 @@ trait LiveModelDAO extends ModelDAO with ZioSlickSupport with DatabaseProvider  
 
     override def count: IO[RepositoryException, Int] = sql"SELECT count(*) FROM SampleModelObject".as[Int].head
 
-    override def report: IO[RepositoryException, String] = {
+    override def report: IO[RepositoryException, String] =
       for {
         count <- sql"SELECT count(*) FROM SampleModelObject".as[Int].head
       } yield {
         s"""SampleModelObject = $count
            |""".stripMargin
       }
-    }
 
     override def sampleModelObjects(): IO[RepositoryException, Seq[SampleModelObject]] =
       Samplemodelobject.result.map(_.map(SamplemodelobjectRow2SampleModelObject))

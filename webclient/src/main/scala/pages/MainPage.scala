@@ -24,6 +24,8 @@ import japgolly.scalajs.react.vdom.html_<^._
 import typingsJapgolly.semanticDashUiDashReact.components._
 import model._
 import org.scalajs.dom
+import org.scalajs.dom.raw.HTMLButtonElement
+import typingsJapgolly.semanticDashUiDashReact.distCommonjsElementsButtonButtonMod.ButtonProps
 import ujson.Value.InvalidData
 import upickle.default._
 
@@ -35,15 +37,14 @@ import upickle.default._
 object MainPage extends AbstractComponent {
   case class State(objects: Seq[SampleModelObject] = Seq.empty)
 
-  class Backend($: BackendScope[_, State]) {
+  class Backend($ : BackendScope[_, State]) {
     def init(state: State): Callback = Callback.empty
-    def refresh(state: State): Callback = {
+    def refresh(state: State): Callback =
       Ajax
         .get("http://localhost:8079/sampleModelObjects") //TODO move the root of the app to a config file
         .send
         .asAsyncCallback
-        .map{
-          xhr =>
+        .map { xhr =>
           try {
             import util.ModelPickler._
             val objects = read[Seq[SampleModelObject]](xhr.responseText)
@@ -55,26 +56,33 @@ object MainPage extends AbstractComponent {
           }
         }
         .completeWith(_.get)
-    }
+
+    def onAddNewObject(event: ReactMouseEventFrom[HTMLButtonElement], data: ButtonProps): Callback =
+      Callback.alert(
+        "Clicked on 'Add New object'... did you expect something else? hey, I can't write everything for you!"
+      )
 
     def render(state: State): VdomElement =
       appContext.consume { appState =>
-        <.div(Table()(
-          TableHeader()(
-            TableRow()(
-              TableHeaderCell()("Id"),
-              TableHeaderCell()("Name")
+        <.div(
+          Table()(
+            TableHeader()(
+              TableRow()(
+                TableHeaderCell()("Id"),
+                TableHeaderCell()("Name")
+              )
+            ),
+            TableBody()(
+              state.objects.toVdomArray { obj =>
+                TableRow()(
+                  TableCell()(obj.id),
+                  TableCell()(obj.name)
+                )
+              }
             )
           ),
-          TableBody()(
-            state.objects.toVdomArray { obj =>
-              TableRow()(
-                TableCell()(obj.id),
-                TableCell()(obj.name)
-              )
-            }
-          )
-        ))
+          Button(onClick = onAddNewObject _)("Add new object")
+        )
       }
   }
   private val component = ScalaComponent

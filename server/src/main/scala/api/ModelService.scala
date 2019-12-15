@@ -33,7 +33,7 @@ trait ModelService extends Directives with UpickleSupport with ModelPickler with
               complete {
                 for {
                   modelOpt <- modelDAO.sampleModelObject(id.toInt)
-                  deleted   <- ZIO.traverse(modelOpt.toSeq)(modelDAO.delete)
+                  deleted  <- ZIO.traverse(modelOpt.toSeq)(modelDAO.delete)
                 } yield deleted
 
               }
