@@ -1,10 +1,14 @@
 package dao
 
-import model.SampleModelObject
-import zio.{ IO, ZIO }
+import model._
+import zio.{IO, ZIO}
 import zioslick.RepositoryException
 
+import scala.concurrent.ExecutionContext
+
 trait MockModelDAO extends ModelDAO {
+  implicit val dbExecutionContext: ExecutionContext
+
   class MockDAO extends ModelDAO.Service {
     override def count: IO[RepositoryException, Int] = ZIO.succeed(10)
 
