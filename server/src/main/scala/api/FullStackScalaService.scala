@@ -30,7 +30,7 @@ abstract class FullStackScalaService
   val route: Route = DebuggingDirectives.logRequest("Request") {
     path("helloWorld") {
       complete {
-        val zio: SlickZIO[String] = for {
+        for {
           count <- modelDAO.count
         } yield s"Yay! Count: $count at ${LocalDateTime.now}"
       }

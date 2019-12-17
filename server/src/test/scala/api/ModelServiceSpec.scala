@@ -10,6 +10,8 @@ import zio.{IO, ZIO}
 import zioslick.RepositoryException
 import upickle.default._
 
+import scala.concurrent.ExecutionContext
+
 /**
  * A set of tests of the ModelService.
  * Note that we have a mock database behind it, so it's only testing business logic in the service
@@ -34,6 +36,8 @@ class ModelServiceSpec
     override def modelDAO: ModelDAO.Service = new MockDAO {
       override def sampleModelObjects(): IO[RepositoryException, Seq[SampleModelObject]] = ZIO.succeed(objects)
     }
+
+    override implicit val dbExecutionContext: ExecutionContext = ExecutionContext.Implicits.global
   }
 
   //TODO test your route here, we would probably not have a test like the one below in reality, since it's super simple.
