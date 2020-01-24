@@ -11,11 +11,11 @@ object ModelDAOIntegrationSpec extends LiveEnvironment {
 
   val modelDAOSuite = suite("ModelDAO Suite")(
     testM("sampleModelObjects returns some objects") {
-      assertM(modelDAO.sampleModelObjects(), Assertion.isNonEmpty)
+      assertM(repository.sampleModelObjectOps.search(None)(""), Assertion.isNonEmpty)
     },
     testM("Another way of testing the same") {
       for {
-        objects <- modelDAO.sampleModelObjects()
+        objects <- repository.sampleModelObjectOps.search(None)("")
         _ <- putStrLn("Hey, this happened")
       } yield {
         assert(objects, Assertion.isNonEmpty)

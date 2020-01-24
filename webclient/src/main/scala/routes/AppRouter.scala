@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Roberto Leibman
+ * Copyright 2020 Roberto Leibman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,14 @@ package routes
 import java.time.LocalDate
 
 import components.AbstractComponent
+import japgolly.scalajs.react.ReactMouseEventFrom
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._
-import japgolly.scalajs.react.{ BackendScope, Callback, CallbackTo, ReactMouseEventFrom, ScalaComponent }
-import org.scalajs.dom._
-import org.scalajs.dom.ext.{ Ajax, AjaxException }
 import org.scalajs.dom.raw.HTMLAnchorElement
 import pages.MainPage
-import upickle.default.read
-import typingsJapgolly.semanticDashUiDashReact.distCommonjsCollectionsMenuMenuItemMod._
 import typingsJapgolly.semanticDashUiDashReact.components._
-
-import scala.concurrent.Future
+import typingsJapgolly.semanticDashUiDashReact.distCommonjsCollectionsMenuMenuItemMod._
 
 /**
  * The app's router. It has two main responsibilities:
@@ -39,8 +34,6 @@ import scala.concurrent.Future
  * - Choose which "page" to present depending on the route (i.e. the url)
  */
 object AppRouter extends AbstractComponent {
-
-  import scala.concurrent.ExecutionContext.Implicits.global
 
   case class State()
 
@@ -105,11 +98,11 @@ object AppRouter extends AbstractComponent {
     )
 
     (trimSlashes
-      | staticRoute("#mainPage", MainPageData) ~> renderR(ctrl => MainPage()))
+    | staticRoute("#mainPage", MainPageData) ~> renderR(ctrl => MainPage()))
       .notFound(redirectToPage(MainPageData)(Redirect.Replace))
       .renderWith(layout)
   }
-  private val baseUrl = BaseUrl.fromWindowOrigin_/
+  private val baseUrl: BaseUrl = BaseUrl.fromWindowOrigin_/
 
-  val router = Router.apply(baseUrl, config)
+  val router: Router[AppPageData] = Router.apply(baseUrl, config)
 }

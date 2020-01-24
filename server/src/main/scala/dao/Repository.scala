@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Roberto Leibman
+ * Copyright 2019 Roberto Leibman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package app
+package dao
 
-import japgolly.scalajs.react.React
-import japgolly.scalajs.react.React.Context
+import model.{ SampleModelObject, Search, SimpleSearch }
+import zio.{ IO, Task }
+import zioslick.RepositoryException
 
 /**
- * We put all global app state here, things like the current session, user name, theme, configuration, etc.
+ * This trait defines all of the Model's database methods.
  */
-case class AppState(
-  //Add global app state here
-)
+//@accessible
+//@mockable
+trait Repository {
+  def repository: Repository.Service
+}
 
-object AppState {
-  val ctx: Context[AppState] = React.createContext(AppState())
+object Repository {
+
+  trait Service {
+    val sampleModelObjectOps: CRUDOperations[SampleModelObject, Int, SimpleSearch, Any]
+  }
 }

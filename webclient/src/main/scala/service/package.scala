@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package app
+import model.{ SampleModelObject, SimpleSearch }
+import util.Config
 
-import japgolly.scalajs.react.React
-import japgolly.scalajs.react.React.Context
+package object service extends Config {
 
-/**
- * We put all global app state here, things like the current session, user name, theme, configuration, etc.
- */
-case class AppState(
-  //Add global app state here
-)
+  object SampleModelObjectRESTClient extends LiveRESTClient[SampleModelObject, Int, SimpleSearch] {
+    override val baseUrl: String = s"$mealoramaHost/api/sampleModelObjects"
+    //If you want anything more than CRUD out of this client, you override remoteSystem and add other methods you may want
+  }
 
-object AppState {
-  val ctx: Context[AppState] = React.createContext(AppState())
 }

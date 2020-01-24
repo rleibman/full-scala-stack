@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Roberto Leibman
+ * Copyright 2020 Roberto Leibman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package util
 
-import model.SampleModelObject
+import model.{ DefaultSort, SampleModelObject, SimpleSearch, SimpleTextSearch, SortDirection }
 import upickle.default.{ macroRW, ReadWriter => RW, _ }
 
 /**
@@ -25,5 +25,17 @@ import upickle.default.{ macroRW, ReadWriter => RW, _ }
  * you want to use a different method for marshalling json between the client and server
  */
 object ModelPickler {
+  import SortDirection._
+
+  implicit val SortDirectionRW: RW[SortDirection] = upickle.default
+    .readwriter[String]
+    .bimap[SortDirection](
+      x => x.toString,
+      str => SortDirection.withName(str)
+    )
+
   implicit val SampleModelObjectRW: RW[SampleModelObject] = macroRW
+  implicit val SimpleSearchRW: RW[SimpleSearch]           = macroRW
+  implicit val DefaultSortRW: RW[DefaultSort]             = macroRW
+  implicit val SimpleTextSearchRW: RW[SimpleTextSearch]   = macroRW
 }

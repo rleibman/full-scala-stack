@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 // Common Stuff
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
@@ -66,11 +66,11 @@ lazy val server = project
     Defaults.itSettings,
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % zioVersion withSources(),
-      "dev.zio" %% "zio-macros-core" % "0.6.0" withSources(),
+      "dev.zio" %% "zio-macros-core" % "0.6.2" withSources(),
 
       "com.typesafe.slick" %% "slick" % slickVersion withSources(),
       "com.typesafe.slick" %% "slick-codegen" % slickVersion withSources(),
-      "mysql" % "mysql-connector-java" % "8.0.18",
+      "mysql" % "mysql-connector-java" % "8.0.19",
 
       "com.github.daddykotex" %% "courier" % "2.0.0" withSources(),
 
@@ -82,7 +82,7 @@ lazy val server = project
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3",
 
-      "com.lihaoyi" %% "upickle" % "0.8.0" withSources(),
+      "com.lihaoyi" %% "upickle" % "0.9.8" withSources(),
       "de.heikoseeberger" %% "akka-http-upickle" % "1.30.0" withSources(),
 
       "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "it,test",
@@ -152,24 +152,24 @@ lazy val webclient = project
       ScalajsReactTyped.S.`semantic-ui-react`,
       ScalajsReactTyped.S.`stardust-ui__react-component-ref`,
       "commons-io" % "commons-io" % "2.6" withSources(),
-      "ru.pavkin" %%% "scala-js-momentjs" % "0.10.0" withSources(),
+      "ru.pavkin" %%% "scala-js-momentjs" % "0.10.1" withSources(),
       "io.github.cquiroz" %%% "scala-java-time" % "2.0.0-RC3" withSources(),
       "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.0.0-RC3_2019a" withSources(),
       "org.scala-js" %%% "scalajs-dom" % "0.9.8" withSources(),
       "com.olvind" %%% "scalablytyped-runtime" % "2.1.0",
-      "com.github.japgolly.scalajs-react" %%% "core" % "1.5.0-RC2" withSources(),
-      "com.github.japgolly.scalajs-react" %%% "extra" % "1.5.0-RC2" withSources(),
-      "com.lihaoyi" %%% "upickle" % "0.8.0" withSources(),
-      "com.lihaoyi" %%% "scalatags" % "0.7.0" withSources(),
-      "com.github.japgolly.scalacss" %%% "core" % "0.6.0-RC1" withSources(),
-      "com.github.japgolly.scalacss" %%% "ext-react" % "0.6.0-RC1" withSources(),
-      "com.lihaoyi" %% "upickle" % "0.8.0" % "test" withSources(),
+      "com.github.japgolly.scalajs-react" %%% "core" % "1.6.0" withSources(),
+      "com.github.japgolly.scalajs-react" %%% "extra" % "1.6.0" withSources(),
+      "com.lihaoyi" %%% "upickle" % "0.9.8" withSources(),
+      "com.lihaoyi" %%% "scalatags" % "0.8.4" withSources(),
+      "com.github.japgolly.scalacss" %%% "core" % "0.6.0" withSources(),
+      "com.github.japgolly.scalacss" %%% "ext-react" % "0.6.0" withSources(),
+      "com.lihaoyi" %% "upickle" % "0.9.8" % "test" withSources(),
       "com.github.pathikrit" %% "better-files" % "3.8.0",
       "org.scalatest" %% "scalatest" % "3.1.0" % "test" withSources(),
     ),
     organization := "net.leibman",
     organizationName := "Roberto Leibman",
-    startYear := Some(2019),
+    startYear := Some(2020),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
     scalacOptions ++= Seq(
       "-P:scalajs:sjsDefinedByDefault",

@@ -31,6 +31,9 @@ ddata*
 journal
 snapshots
 
+npm
+*.lock
+
 # Log files
 *.log
 

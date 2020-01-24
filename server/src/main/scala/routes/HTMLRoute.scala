@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package api
+package routes
 
 import akka.http.scaladsl.server.directives.ContentTypeResolver
 import akka.http.scaladsl.server.{ Directives, Route }
-import better.files.File
+import api.Config
+import util.ModelPickler
 
 /**
- * This service serves the site's static content, including the scala.js generated content
+ * A route used to spit out static content
  */
-trait HTMLService extends Directives with Config {
-  val staticContentDir: String = config.getString("full-scala-stack.staticContentDir")
-
-  val dir = File(staticContentDir)
+trait HTMLRoute extends Directives with ModelPickler with Config {
+  val staticContentDir: String = config.getString("mealorama.staticContentDir")
 
   override def getFromDirectory(
     directoryName: String
@@ -35,17 +34,21 @@ trait HTMLService extends Directives with Config {
       getFromFile(s"$staticContentDir/$unmatchedPath")
     }
 
-  def htmlRoute: Route =
+  def htmlRoute: Route = extractLog { log =>
     pathEndOrSingleSlash {
       get {
+        log.info("GET /")
+        log.debug(s"GET $staticContentDir/index.html")
         getFromFile(s"$staticContentDir/index.html")
       }
     } ~
-      get {
-        extractUnmatchedPath { path =>
-          encodeResponse {
-            getFromDirectory(staticContentDir)
-          }
+    get {
+      extractUnmatchedPath { path =>
+        log.debug(s"GET $path")
+        encodeResponse {
+          getFromDirectory(staticContentDir)
         }
       }
+    }
+  }
 }

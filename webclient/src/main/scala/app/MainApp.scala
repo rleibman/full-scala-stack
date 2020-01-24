@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Roberto Leibman
+ * Copyright 2020 Roberto Leibman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package app
 
 import css.AppCSS
 import org.scalajs.dom
-import routes.AppRouter
 
-import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 
 /**

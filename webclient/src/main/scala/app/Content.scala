@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Roberto Leibman
+ * Copyright 2020 Roberto Leibman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,6 @@
  */
 
 package app
-
-/*
- * Copyright 2019 Roberto Leibman
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 import components.AbstractComponent
 import japgolly.scalajs.react._
@@ -53,7 +37,7 @@ object Content extends AbstractComponent {
         AppRouter.router()
       }
 
-    def refresh(s: State) = Callback.empty //TODO: add ajax calls to initialize app state here
+    def refresh(s: State): Callback = Callback.empty //TODO: add ajax calls to initialize app state here
   }
 
   private val component = ScalaComponent

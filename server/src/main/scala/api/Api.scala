@@ -16,27 +16,46 @@
 
 package api
 
-import akka.http.scaladsl.server.{ Route, RouteConcatenation }
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.server.directives.DebuggingDirectives
+import akka.http.scaladsl.server.{ Directives, Route, RouteConcatenation }
 import core.{ Core, CoreActors }
-
-import scala.concurrent.ExecutionContext
+import routes.{ HTMLRoute, ModelRoutes }
 
 /**
- *
+ * This class puts all of the live services together with all of the routes
  * @author rleibman
  */
-trait Api extends RouteConcatenation { this: CoreActors with Core =>
+trait Api
+    extends RouteConcatenation
+    with Directives
+    with LiveEnvironment
+    with HTMLRoute
+    with ModelRoutes
+    with ZIODirectives {
+  this: CoreActors with Core =>
 
-  val service: FullStackScalaService = new FullStackScalaService {
-    override implicit val dbExecutionContext: ExecutionContext = actorSystem.dispatcher
+  private implicit val _ = actorSystem.dispatcher
+
+  //TODO This particular example app doesn't use sessions, look up "com.softwaremill.akka-http-session" if you want sessions
+  val sessionResult = Option("validsession")
+
+  val routes: Route = DebuggingDirectives.logRequest("Request") {
+    extractLog { log =>
+      unauthRoute ~ {
+        extractRequestContext { requestContext =>
+          sessionResult match {
+            case Some(session) =>
+              apiRoute(session)
+            case None =>
+              log.info(
+                s"Unauthorized request of ${requestContext.unmatchedPath}, redirecting to login"
+              )
+              redirect("/loginForm", StatusCodes.Found)
+          }
+        }
+      } ~
+      htmlRoute
+    }
   }
-
-  //Notice the wrapping of the swaggerRoutes into cors...
-  //this is used to enable cors (Cross-origin resource sharing) IMHO,
-  //that should be the responsibility of SwaggerHttpService, but I'll let it be for now
-  val routes: Route = service.route
-  //    ~ io.github.lhotari.akka.http.health.HealthEndpoint.createDefaultHealthRoute()
-  //~ swaggerRoutes.routes //~ respondWithHeaders(web.CORSSupport.headers) { swaggerRoutes.routes }
-
-  //  val rootService = system.actorOf(Props(new RoutedHttpService(routes)))
 }

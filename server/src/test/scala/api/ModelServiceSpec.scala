@@ -1,14 +1,19 @@
 package api
 
+import akka.http.scaladsl.marshalling.Marshal
+import akka.http.scaladsl.model.{ContentType, ContentTypes, HttpEntity, HttpResponse, MessageEntity, RequestEntity}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import dao.{MockModelDAO, ModelDAO}
-import model.SampleModelObject
+import dao.{CRUDOperations, MockRepository, Repository}
+import de.heikoseeberger.akkahttpupickle.UpickleSupport
+import mail.{CourierPostman, Postman}
+import model.{SampleModelObject, SimpleSearch}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import routes.{ModelRoutes, SampleModelObjectRoute}
+import upickle.default._
 import util.ModelPickler
 import zio.{IO, ZIO}
 import zioslick.RepositoryException
-import upickle.default._
 
 import scala.concurrent.ExecutionContext
 
@@ -22,7 +27,9 @@ class ModelServiceSpec
     with Matchers
     with ScalatestRouteTest
     with ZIODirectives
-    with ModelPickler {
+  with UpickleSupport
+    with ModelPickler
+ {
 
   val objects = Seq(
     SampleModelObject(0, "Zero"),
@@ -32,24 +39,37 @@ class ModelServiceSpec
     SampleModelObject(4, "Four"),
   )
 
-  val service = new ModelService with MockModelDAO {
-    override def modelDAO: ModelDAO.Service = new MockDAO {
-      override def sampleModelObjects(): IO[RepositoryException, Seq[SampleModelObject]] = ZIO.succeed(objects)
-    }
+  val service = new SampleModelObjectRoute  with MockRepository with CourierPostman with Config {
+    override def repository: Repository.Service = new Repository.Service {
+      override val sampleModelObjectOps: CRUDOperations[SampleModelObject, Int, SimpleSearch, Any] = new MockOps {
+        override def search(search: Option[SimpleSearch])(
+          implicit session: Any
+        ): IO[RepositoryException, Seq[SampleModelObject]] = ZIO.succeed(objects)
+        override def get(pk: Int)(implicit session: Any): IO[RepositoryException, Option[SampleModelObject]] =
+          ZIO.succeed(objects.headOption)
 
-    override implicit val dbExecutionContext: ExecutionContext = ExecutionContext.Implicits.global
+      }
+    }
   }
 
   //TODO test your route here, we would probably not have a test like the one below in reality, since it's super simple.
   "The Service" should  {
-    "return some objects on a get" in {
-      Get("/sampleModelObjects") ~> service.modelRoute ~> check {
-        val res = read[Seq[SampleModelObject]](responseAs[String])
+    "return one objects on a get" in {
+      Get("/sampleModelObject/1") ~> service.crudRoute.route("") ~> check {
+        val res = responseAs[Seq[SampleModelObject]].headOption
+
+        println(res)
+        res shouldEqual objects.headOption
+      }
+    }
+    "return some objects on a search" in {
+      Post("/sampleModelObject/search", HttpEntity(ContentTypes.`application/json`, write(SimpleSearch()))) ~> service.crudRoute.route("") ~> check {
+        val str = responseAs[ujson.Value]
+        val res = responseAs[Seq[SampleModelObject]]
 
         println(res)
         res shouldEqual objects
       }
     }
   }
-
 }

@@ -90,18 +90,20 @@ does full optimization, but it's resulting file will be both harder to read and 
 ## Here's how to do some common tasks
 Note that I've put a bunch of "//TODO"s throughout the code that in places where I think you can expand or put additional stuff.
 
-### Add a new web page
+### Adding a new web page
 For the most part, I follow the architecture laid out by [scalajs-react](https://github.com/japgolly/scalajs-react/blob/master/doc/ROUTER.md), the documentation there is pretty awesome.
 
-### Add a new model object
+### Adding a new model object
 - Add the model object itself in ```common/shared/src/main/scala/model``` typically these objects are scala case classes
 - Add the database creation code for your object (I like to put these as sql scripts in ```server/src/main/sql```), run it against your database
 - Use util.CodeGen to re-generate Tables.scala which will contain the stuff that maps your SQL database with our model.
-- Add the CRUD (and other) database operations to ```src/main/scala/dao/ModelDAO```, you'll have to create "live" and "mock" versions of all the methods you create
-- Add a service that does basic REST crud operations about your object in ```server/src/main/scala/api```, look at ```ModelService``` as an example
-- Add the web pages you need to do stuff with your new object (see above)
+- Add the CRUD (and other) database operations to ```src/main/scala/dao/Repository```, you'll have to create "live" and "mock" versions of all the methods you create. 
+For every object you'll probably want to declare a CRUDOperations entry.
+- Add a service that does basic REST crud operations about your object in ```server/src/main/scala/routes```, look at ```SampleModelObjectRoute``` as an example
+- In the web, you'll need a REST client that can talk to your server, declare one in ```webclient/src/main/scala/service/package.scala```
+- Add the web pages you need to do stuff with your new object (see above). 
 
-### Add a new javascript library
+### Adding a new javascript library
 Assuming you are using ScalablyTyped, you need to add to ```build.sbt``` the typings for the javascript library (read the [ScalablyTyped documentation](https://github.com/oyvindberg/ScalablyTyped) ), as well as adding the library itself to the bundler (the ```npmDependencies``` section).
 If the library is a react library, you should choose a flavor of react bindings (currently either japgolly or Slinky bindings).
 Once you do that you should be good to go!
@@ -109,8 +111,8 @@ Once you do that you should be good to go!
 ## Testing
 Most of this project is boilerplate, so *by definition* there's not much to test. The question is always "what to test?". Business logic of course. In this architecture business logic resides in the following places:
 - The server's Service classes. I suggest you keep your routes simple and create either methods within those classes or separate business class logic. I'll write a couple of tests to show how to test the routes
-- The database specific ModelDAO... because Slick is not a full ORM library, a lot of the mapping from Relational to OO happens in the DAO, it's a good idea to test these. 
-  these are considered integration tests and are in the server/it path
+- The database specific Repository... because Slick is not a full ORM library, a lot of the mapping from Relational to OO happens in the DAO, it's a good idea to test these. 
+  these are considered integration tests and are in the server/src/it path
 - The web application itself, I personally find it very hard to write unit tests against user interface, you should read:
     - https://www.scala-js.org/libraries/testing.html
     - https://github.com/japgolly/scalajs-react/blob/master/doc/TESTING.md

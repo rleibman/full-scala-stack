@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package app
+package util
 
-import japgolly.scalajs.react.React
-import japgolly.scalajs.react.React.Context
-
-/**
- * We put all global app state here, things like the current session, user name, theme, configuration, etc.
- */
-case class AppState(
-  //Add global app state here
-)
-
-object AppState {
-  val ctx: Context[AppState] = React.createContext(AppState())
+trait Config {
+  val mealoramaHost = "http://localhost:8079/"
 }
