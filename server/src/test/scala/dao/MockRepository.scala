@@ -15,7 +15,7 @@ trait MockRepository extends Repository {
     override def get(pk: Int)(implicit session: Any): IO[RepositoryException, Option[SampleModelObject]] =
       ZIO.succeed(None)
 
-    override def delete(pk: Int)(implicit session: Any): IO[RepositoryException, Boolean] = ZIO.succeed(true)
+    override def delete(pk: Int, softDelete: Boolean)(implicit session: Any): IO[RepositoryException, Boolean] = ZIO.succeed(true)
 
     override def search(search: Option[SimpleSearch])(
       implicit session: Any

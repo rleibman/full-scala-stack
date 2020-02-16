@@ -15,7 +15,10 @@
  */
 
 package util
+import org.scalajs.dom.window
 
 trait Config {
-  val mealoramaHost = "http://localhost:8079/"
+  val mealoramaHost =
+    s"${window.location.hostname}${if (window.location.port != "" && window.location.port != "80") s":${window.location.port}"
+    else ""}"
 }

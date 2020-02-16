@@ -28,6 +28,7 @@ trait MySQLDatabaseProvider extends DatabaseProvider {
   val configKey: String
 
   override val databaseProvider: DatabaseProvider.Service = new DatabaseProvider.Service {
+    //We use effect total because though starting up the db may indeed throw an exception, that's really catastrophic: it is not "normal" error behavior and should really break early.
     override val db: UIO[BasicBackend#DatabaseDef] = ZIO.effectTotal(Database.forConfig(configKey))
   }
 }

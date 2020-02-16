@@ -16,7 +16,6 @@
 
 package app
 
-import css.AppCSS
 import org.scalajs.dom
 
 import scala.scalajs.js.annotation.JSExport
@@ -27,7 +26,6 @@ import scala.scalajs.js.annotation.JSExport
 object MainApp {
   @JSExport
   def main(args: Array[String]): Unit = {
-    AppCSS.load()
 
     Content().renderIntoDOM(dom.document.getElementById("content"))
 

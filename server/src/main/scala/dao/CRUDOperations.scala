@@ -30,7 +30,7 @@ import zioslick.RepositoryException
 trait CRUDOperations[E, PK, SEARCH <: Search[_], SESSION] {
   def upsert(e: E)(implicit session: SESSION): IO[RepositoryException, E]
   def get(pk: PK)(implicit session: SESSION): IO[RepositoryException, Option[E]]
-  def delete(pk: PK)(implicit session: SESSION): IO[RepositoryException, Boolean]
+  def delete(pk: PK, softDelete: Boolean = false)(implicit session: SESSION): IO[RepositoryException, Boolean]
   def search(search: Option[SEARCH] = None)(
     implicit session: SESSION
   ): IO[RepositoryException, Seq[E]]

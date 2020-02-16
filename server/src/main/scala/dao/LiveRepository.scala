@@ -63,7 +63,7 @@ trait LiveRepository
             .headOption
             .map(_.map(SampleModelObjectRow2SampleModelObject))
 
-        override def delete(pk: Int)(implicit session: Any): IO[RepositoryException, Boolean] =
+        override def delete(pk: Int, softDelete: Boolean)(implicit session: Any): IO[RepositoryException, Boolean] =
           SampleModelObjectQuery
             .filter(_.id === pk)
             .delete

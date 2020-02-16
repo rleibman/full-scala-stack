@@ -53,6 +53,8 @@ object CRUDRoute {
 
     val pkRegex: Regex = "^[0-9]*$".r
 
+    val defaultSoftDelete: Boolean = false
+
     /**
      * Override this to add other authenticated (i.e. with session) routes
      * @param session
@@ -72,7 +74,7 @@ object CRUDRoute {
      * @param session
      * @return
      */
-    def childrenRoutes(obj: Task[Option[E]], session: SESSION): Seq[Route] = Seq.empty
+    def childrenRoutes(pk: PK, obj: Task[Option[E]], session: SESSION): Seq[Route] = Seq.empty
 
     /**
      * You need to override this method so that the architecture knows how to get a primary key from an object
@@ -87,7 +89,7 @@ object CRUDRoute {
       for {
         objOpt <- objTask
         deleted <- objOpt.fold(Task.succeed(false): Task[Boolean])(
-                    obj => ops.delete(getPK(obj))(session)
+                    obj => ops.delete(getPK(obj), defaultSoftDelete)(session)
                   )
       } yield deleted
 
@@ -114,9 +116,11 @@ object CRUDRoute {
     )(implicit objRW: ReadWriter[E], searchRW: ReadWriter[SEARCH], pkRW: ReadWriter[PK]): Route =
       pathPrefix(url) {
         other(session) ~
-        (post | put) {
-          entity(as[E]) { obj =>
-            complete(upsertOperation(obj, session))
+        pathEndOrSingleSlash {
+          (post | put) {
+            entity(as[E]) { obj =>
+              complete(upsertOperation(obj, session))
+            }
           }
         } ~
         path("search") {
@@ -134,14 +138,19 @@ object CRUDRoute {
           }
         } ~
         pathPrefix(pkRegex) { id =>
-          childrenRoutes(getOperation(read[PK](id), session), session)
+          childrenRoutes(read[PK](id), getOperation(read[PK](id), session), session)
             .reduceOption(_ ~ _)
             .getOrElse(reject) ~
-          get {
-            complete(getOperation(read[PK](id), session).map(_.toSeq)) //The #!@#!@# akka optionMarshaller gets in our way and converts an option to null/object before it ships it, so we convert it to seq
-          } ~
-          delete {
-            complete(deleteOperation(getOperation(read[PK](id), session), session))
+          pathEndOrSingleSlash {
+            get {
+              complete(
+                getOperation(read[PK](id), session)
+                  .map(_.toSeq) //The #!@#!@# akka optionMarshaller gets in our way and converts an option to null/object before it ships it, so we convert it to seq
+              )
+            } ~
+            delete {
+              complete(deleteOperation(getOperation(read[PK](id), session), session))
+            }
           }
         }
       }

@@ -39,7 +39,7 @@ lazy val common =
         libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided"
     )
     .jsSettings(
-    // Add JS-specific settings here
+      libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.9" withSources ()
     )
 
 lazy val commonJVM = common.jvm
@@ -47,7 +47,7 @@ lazy val commonJS = common.js
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Server
-lazy val akkaVersion = "2.6.1"
+lazy val akkaVersion       = "2.6.3"
 lazy val akkaHttpVersion = "10.1.11"
 lazy val slickVersion = "3.3.2"
 lazy val zioVersion = "1.0.0-RC17"
@@ -82,8 +82,8 @@ lazy val server = project
       "com.typesafe.akka" %% "akka-stream" % akkaVersion,
       "ch.qos.logback" % "logback-classic" % "1.2.3",
 
-      "com.lihaoyi" %% "upickle" % "0.9.8" withSources(),
-      "de.heikoseeberger" %% "akka-http-upickle" % "1.30.0" withSources(),
+      "com.lihaoyi" %% "upickle" % "0.9.9" withSources(),
+      "de.heikoseeberger" %% "akka-http-upickle" % "1.31.0" withSources(),
 
       "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "it,test",
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % "it,test",
@@ -159,11 +159,11 @@ lazy val webclient = project
       "com.olvind" %%% "scalablytyped-runtime" % "2.1.0",
       "com.github.japgolly.scalajs-react" %%% "core" % "1.6.0" withSources(),
       "com.github.japgolly.scalajs-react" %%% "extra" % "1.6.0" withSources(),
-      "com.lihaoyi" %%% "upickle" % "0.9.8" withSources(),
-      "com.lihaoyi" %%% "scalatags" % "0.8.4" withSources(),
+      "com.lihaoyi" %%% "upickle" % "0.9.9" withSources(),
+      "com.lihaoyi" %%% "scalatags" % "0.8.5" withSources(),
       "com.github.japgolly.scalacss" %%% "core" % "0.6.0" withSources(),
       "com.github.japgolly.scalacss" %%% "ext-react" % "0.6.0" withSources(),
-      "com.lihaoyi" %% "upickle" % "0.9.8" % "test" withSources(),
+      "com.lihaoyi" %% "upickle" % "0.9.9" % "test" withSources(),
       "com.github.pathikrit" %% "better-files" % "3.8.0",
       "org.scalatest" %% "scalatest" % "3.1.0" % "test" withSources(),
     ),

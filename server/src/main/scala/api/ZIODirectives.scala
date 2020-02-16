@@ -38,20 +38,18 @@ trait ZIODirectives extends DefaultRuntime {
     m2: Marshaller[Throwable, HttpResponse]
   ): Marshaller[Task[A], HttpResponse] =
     Marshaller { implicit ec => a =>
-      {
-        val r = a.foldM(
-          e => Task.fromFuture(implicit ec => m2(e)),
-          a => Task.fromFuture(implicit ec => m1(a))
-        )
+      val r = a.foldM(
+        e => Task.fromFuture(implicit ec => m2(e)),
+        a => Task.fromFuture(implicit ec => m1(a))
+      )
 
-        val p = Promise[List[Marshalling[HttpResponse]]]()
+      val p = Promise[List[Marshalling[HttpResponse]]]()
 
-        unsafeRunAsync(r) { exit =>
-          exit.fold(e => p.failure(e.squash), s => p.success(s))
-        }
-
-        p.future
+      unsafeRunAsync(r) { exit =>
+        exit.fold(e => p.failure(e.squash), s => p.success(s))
       }
+
+      p.future
     }
 
   private def fromFunction[A, B](f: A => Future[B]): ZIO[A, Throwable, B] =
