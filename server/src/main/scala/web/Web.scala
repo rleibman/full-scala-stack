@@ -42,9 +42,21 @@ trait Web extends Config {
 
   val log: LoggingAdapter = Logging.getLogger(actorSystem, this)
 
-  val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
+  val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] = {
+    import actorSystem.dispatcher
+
+    val host = config.getString("full-scala-stack.host")
+    val port = config.getInt("full-scala-stack.port")
+
     Http()
-      .bind(interface = config.getString("full-scala-stack.host"), port = config.getInt("full-scala-stack.port"))
+      .bind(interface = host, port = port)
+      .mapMaterializedValue { bind =>
+        bind.foreach { server =>
+          log.info(server.localAddress.toString)
+        }
+        bind
+      }
+  }
 
   val bindingFuture: Future[Http.ServerBinding] =
     serverSource
