@@ -25,7 +25,7 @@ import util.ModelPickler
  * A route used to spit out static content
  */
 trait HTMLRoute extends Directives with ModelPickler with Config {
-  val staticContentDir: String = config.getString("mealorama.staticContentDir")
+  val staticContentDir: String = config.getString("full-scala-stack.staticContentDir")
 
   override def getFromDirectory(
     directoryName: String

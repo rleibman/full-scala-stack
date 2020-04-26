@@ -27,8 +27,8 @@ lazy val gitSettings =
   )
 
 ThisBuild / name := "full-scala-stack"
-ThisBuild /organization := "net.leibman"
-ThisBuild /scalaVersion := "2.12.10"
+ThisBuild / organization := "net.leibman"
+ThisBuild / scalaVersion := "2.12.10"
 
 ////////////////////////////////////////////////////////////////////////////////////
 // common (i.e. model)

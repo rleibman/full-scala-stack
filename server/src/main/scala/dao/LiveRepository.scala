@@ -37,12 +37,11 @@ trait LiveRepository
     with DatabaseProvider
     with Config
     with ModelSlickInterop {
-  self =>
   private val runtime                               = new DefaultRuntime {}
   implicit val dbExecutionContext: ExecutionContext = runtime.platform.executor.asEC
 
   implicit def provideDB[R](dbio: DBIO[R]): IO[RepositoryException, R] =
-    fromDBIO(dbio).provide(self)
+    fromDBIO(dbio).provide(this)
 
   override def repository: Repository.Service = new Repository.Service {
 
