@@ -66,7 +66,6 @@ lazy val server = project
     Defaults.itSettings,
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % zioVersion withSources(),
-      "dev.zio" %% "zio-macros-core" % "0.6.2" withSources(),
 
       "com.typesafe.slick" %% "slick" % slickVersion withSources(),
       "com.typesafe.slick" %% "slick-codegen" % slickVersion withSources(),
