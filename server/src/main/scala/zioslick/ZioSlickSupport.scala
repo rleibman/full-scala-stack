@@ -19,8 +19,8 @@ package zioslick
 import java.sql.SQLException
 
 import slick.SlickException
-import slick.dbio.{ DBIO, DBIOAction, Effect, NoStream }
-import zio.{ DefaultRuntime, IO, ZIO }
+import slick.dbio.DBIO
+import zio.ZIO
 
 trait ZioSlickSupport {
   implicit def fromDBIO[R](dbio: DBIO[R]): SlickZIO[R] =
@@ -33,10 +33,5 @@ trait ZioSlickSupport {
               case e: SQLException   => RepositoryException("SQL Repository Error", Some(e))
             }
     } yield r
-
-  def from[R](zio: IO[Throwable, R])(): DBIOAction[R, NoStream, Effect] = {
-    val runtime = new DefaultRuntime {}
-    DBIO.from(runtime.unsafeRunToFuture(zio))
-  }
 
 }
