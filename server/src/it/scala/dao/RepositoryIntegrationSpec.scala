@@ -4,10 +4,7 @@ import api.LiveEnvironment
 import zio.console._
 import zio.test.{Assertion, _}
 
-import scala.concurrent.ExecutionContext
-
 object ModelDAOIntegrationSpec extends LiveEnvironment {
-  override implicit val dbExecutionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   val modelDAOSuite = suite("ModelDAO Suite")(
     testM("sampleModelObjects returns some objects") {
@@ -25,5 +22,3 @@ object ModelDAOIntegrationSpec extends LiveEnvironment {
 }
 
 object AllSuites extends DefaultRunnableSpec(ModelDAOIntegrationSpec.modelDAOSuite)
-
-
