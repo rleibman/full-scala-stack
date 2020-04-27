@@ -23,7 +23,7 @@ import akka.actor.ActorSystem
  */
 trait Core {
 
-  implicit val actorSystem: ActorSystem
+  implicit def actorSystem: ActorSystem
 }
 
 // $COVERAGE-OFF$ This is actual code that we can't test, so we shouldn't report on it

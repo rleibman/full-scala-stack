@@ -22,7 +22,7 @@ import akka.stream.scaladsl._
 import api.{ Api, Config }
 import core.{ Core, CoreActors }
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.control.NonFatal
 
 // $COVERAGE-OFF$ This is actual code that we can't test, so we shouldn't report on it
@@ -43,7 +43,7 @@ trait Web extends Config {
   val log: LoggingAdapter = Logging.getLogger(actorSystem, this)
 
   val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] = {
-    import actorSystem.dispatcher
+    implicit def executionContext: ExecutionContext = actorSystem.dispatcher
 
     val host = config.getString("full-scala-stack.host")
     val port = config.getInt("full-scala-stack.port")

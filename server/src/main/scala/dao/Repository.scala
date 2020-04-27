@@ -16,15 +16,11 @@
 
 package dao
 
-import model.{ SampleModelObject, Search, SimpleSearch }
-import zio.{ IO, Task }
-import zioslick.RepositoryException
+import model.{ SampleModelObject, SimpleSearch }
 
 /**
  * This trait defines all of the Model's database methods.
  */
-//@accessible
-//@mockable
 trait Repository {
   def repository: Repository.Service
 }
