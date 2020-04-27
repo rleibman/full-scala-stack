@@ -27,7 +27,7 @@ trait ZioSlickSupport {
     for {
       db <- ZIO.accessM[DatabaseProvider](_.databaseProvider.db)
       r <- ZIO
-            .fromFuture(implicit ec => db.run(dbio))
+            .fromFuture(_ => db.run(dbio))
             .mapError {
               case e: SlickException => RepositoryException("Slick Repository Error", Some(e))
               case e: SQLException   => RepositoryException("SQL Repository Error", Some(e))
