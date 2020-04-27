@@ -23,7 +23,7 @@ import slick.dbio.DBIO
 import zio.ZIO
 
 trait ZioSlickSupport {
-  implicit def fromDBIO[R](dbio: DBIO[R]): SlickZIO[R] =
+  def fromDBIO[R](dbio: DBIO[R]): SlickZIO[R] =
     for {
       db <- ZIO.accessM[DatabaseProvider](_.databaseProvider.db)
       r <- ZIO
