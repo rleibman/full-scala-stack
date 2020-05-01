@@ -29,7 +29,6 @@ object CodeGen
     extends LiveEnvironment
 // with App
     {
-  override implicit val dbExecutionContext: ExecutionContext = ExecutionContext.Implicits.global
 
   println(Tables.schema.createStatements.mkString(";\n"))
   println

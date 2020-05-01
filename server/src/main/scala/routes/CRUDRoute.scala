@@ -27,7 +27,7 @@ import zio.Task
 import scala.util.matching.Regex
 
 /**
- * A crud route avoids boilerplate by definining a simple route for crud operations of an object
+ * A crud route avoids boilerplate by defining a simple route for crud operations of an object
  *
  * @tparam E The model object that is the base of the route
  * @tparam PK The type of the object's primary key (used for gets/deletes)

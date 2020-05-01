@@ -21,10 +21,8 @@ import mail.Postman
 import model.{ SampleModelObject, SimpleSearch }
 import slick.dbio.DBIO
 import slick.jdbc.MySQLProfile.api._
-import zio.{ DefaultRuntime, IO }
+import zio.IO
 import zioslick.{ DatabaseProvider, RepositoryException, ZioSlickSupport }
-
-import scala.concurrent.ExecutionContext
 
 /**
  * Implements the model's database methods using slick and a given database provider
@@ -37,10 +35,8 @@ trait LiveRepository
     with DatabaseProvider
     with Config
     with ModelSlickInterop {
-  private val runtime                               = new DefaultRuntime {}
-  implicit val dbExecutionContext: ExecutionContext = runtime.platform.executor.asEC
 
-  implicit def provideDB[R](dbio: DBIO[R]): IO[RepositoryException, R] =
+  private def provideDB[R](dbio: DBIO[R]): IO[RepositoryException, R] =
     fromDBIO(dbio).provide(this)
 
   override def repository: Repository.Service = new Repository.Service {
@@ -51,33 +47,39 @@ trait LiveRepository
       new CRUDOperations[SampleModelObject, Int, SimpleSearch, Any] {
 
         override def upsert(obj: SampleModelObject)(implicit session: Any): IO[RepositoryException, SampleModelObject] =
-          (SampleModelObjectQuery returning SampleModelObjectQuery.map(_.id) into ((_, id) => obj.copy(id = id)))
-            .insertOrUpdate(SampleModelObject2SampleModelObjectRow(obj))
+          provideDB(
+            (SampleModelObjectQuery returning SampleModelObjectQuery.map(_.id) into ((_, id) => obj.copy(id = id)))
+              .insertOrUpdate(SampleModelObject2SampleModelObjectRow(obj))
+          )
             .map(_.getOrElse(obj))
 
         override def get(pk: Int)(implicit session: Any): IO[RepositoryException, Option[SampleModelObject]] =
-          SampleModelObjectQuery
-            .filter(_.id === pk)
-            .result
-            .headOption
+          provideDB(
+            SampleModelObjectQuery
+              .filter(_.id === pk)
+              .result
+              .headOption
+          )
             .map(_.map(SampleModelObjectRow2SampleModelObject))
 
         override def delete(pk: Int, softDelete: Boolean)(implicit session: Any): IO[RepositoryException, Boolean] =
-          SampleModelObjectQuery
-            .filter(_.id === pk)
-            .delete
+          provideDB(
+            SampleModelObjectQuery
+              .filter(_.id === pk)
+              .delete
+          )
             .map(_ > 0)
 
         //TODO add any search and sort parameters here
         override def search(
           search: Option[SimpleSearch]
         )(implicit session: Any): IO[RepositoryException, Seq[SampleModelObject]] =
-          SampleModelObjectQuery.result
+          provideDB(SampleModelObjectQuery.result)
             .map(_.map(SampleModelObjectRow2SampleModelObject))
 
         //TODO add any search parameters here
         override def count(search: Option[SimpleSearch])(implicit session: Any): IO[RepositoryException, Long] =
-          SampleModelObjectQuery.length.result
+          provideDB(SampleModelObjectQuery.length.result)
             .map(_.toLong)
 
       }

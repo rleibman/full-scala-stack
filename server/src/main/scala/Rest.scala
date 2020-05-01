@@ -29,6 +29,4 @@ object Rest
     with CoreActors
     with Api // The api
     with Web // As a web service
-    with LiveEnvironment {
-  override implicit val dbExecutionContext: ExecutionContext = actorSystem.dispatcher
-}
+    with LiveEnvironment
